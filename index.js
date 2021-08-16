@@ -4,9 +4,9 @@ const path = require("path")
 const axios = require('axios')
 const port = 3000
 const API_URL = 'https://stageapi.immailapp.ca'
+
 const EMAIL_DOMAIN = 'companyxpto.com'
-// const API_KEY = 'c6e235cf-329c-4a95-8d1b-8262c28b4a6b'
-const API_KEY = 'cbed6859-d2a1-469a-8949-b5e3a0f2b9a9' // Go to immail.ca > Sign in > Manage domain > API Key
+const API_KEY = 'xxxxxxxxxxxx' // Go to immail.ca > Sign in > Manage domain > API Key
 
 const app = express()
 
