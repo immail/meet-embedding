@@ -32,7 +32,12 @@ E.g.:
 EMAIL_DOMAIN="companyxpto.com"
 ```
 3. Set for the constant `API_KEY` the api key that you just generated.
+```
+E.g.:
+API_KEY="xxxxxxxxxxx"
+```
 _Remember, this is only a example project, never set the API Key hard coded like this. For a production projet it's better keep it in a env variable._
+
 
 ## Run the app
 ```
