@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Meeting page</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+
+  <div style="display: flex">
+    <div style="min-width: 50%;padding: 20px;">
+
+      <h1>imMail Meet Embedding</h1>
+
+      <div>
+        <h3>1. Insert your name:</h3>
+        <label for="firstName">First name: </label>
+        <input type="text" id="firstName" value="">
+        <label for="lastName">Last name: </label>
+        <input type="text" id="lastName" value=""><br />
+        <small>The name of the user will be passed to the video conference session.</small>
+      </div>
+  
+      <div>
+        <h3>2. Create a meeting room:</h3>
+        https://web.immail.ca/meet/<input type="text" id="roomName" name="roomName" />
+        <button onclick="createMeetingRoom()">Create a meeting room</button><br />
+        <small>This is going to be the <b>meeting url</b> and will be set on <b>iframe src</b> attribute.</small>
+      </div>
+  
+      <div>
+        <h3>3. Choose some options</h3>
+        Comming soon...
+        <!-- <input type="checkbox" id="option1" value="start_recording">
+        <label for="option1"> Start Recording Automatically</label>
+        <input type="checkbox" id="option2" value="">
+        <label for="vehicle2"> Start audio </label>
+        <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+        <label for="vehicle3"> I have a boat</label> -->
+      </div>
+  
+      <div style="margin-top: 20px;">
+        <h3>3. Click to start:</h3>
+
+        <button onclick="generateTokenAndEnterRoom(true)">Enter as Moderator</button>
+        <button onclick="generateTokenAndEnterRoom(false)">Enter as Guest</button>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <h3>4. Close if you want:</h3>
+
+        <button onclick="closeMeeting()">Close Meeting</button>
+      </div>
+    </div>
+
+    <div style="background-color: #f2f2f2; width: 100%; min-height: calc(100vh - 60px);padding: 20px;">
+      <h1>The video conference will appear here:</h1>
+      <div id="iframePlaceholder"></div>
+    </div>
+
+    <script id="iframeTemplate" type="text/html">
+      <iframe
+        id="iframe"
+        allow="camera; microphone; display-capture"
+        allowfullscreen="true"
+        webkitallowfullscreen="true"
+        mozallowfullscreen="true"
+        src="..."
+        width="100%"
+        height="800">
+      </iframe>
+    </script>
+  </div>
+
+  
+</body>
+</html>
+
+<script>
+  let roomName;
+  let jwtToken;
+  let src;
+
+  function createMeetingRoom () {
+    return fetch('http://localhost:3000/room/create')
+      .then(response => response.json())
+      .then(({ name }) => {
+        roomName = name;
+        document.getElementById('roomName').value = name;
+      });
+  };
+
+  function generateTokenAndEnterRoom (moderator) {
+    return fetch(`http://localhost:3000/token/participant?roomName=${roomName}&moderator=${moderator}`)
+      .then(response => response.json())
+      .then(token => {
+        jwtToken = token;
+
+        const element = document.getElementById("iframePlaceholder");
+        const template = document.getElementById("iframeTemplate");
+        element.innerHTML = template.innerHTML;
+
+        const iframe = document.getElementById('iframe');
+
+        const options = {
+          first_name: document.getElementById("firstName").value,
+          last_name: document.getElementById("lastName").value,
+          jwt: token,
+          // start_recording: true
+          // startWithAudioMuted: true,
+          // startWithVideoMuted: true,
+          // fileRecordingsEnabled: true
+        }
+
+        const params = Object.keys(options)
+          .reduce((acc, key, i) => {
+            if (i > 0) acc += '&'
+            acc += `${key}=${options[key]}`
+            return acc
+          }, '');
+
+        iframe.src = `https://stageweb.immailapp.ca/meet/${roomName}?${params}`;
+      });
+  };
+
+  function closeMeeting () {
+    const element = document.getElementById("iframePlaceholder");
+    element.innerHTML = null;
+  }
+
+</script>
