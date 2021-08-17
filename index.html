@@ -17,23 +17,24 @@
       <h1>imMail Meet Embedding</h1>
 
       <div>
-        <h3>1. Insert your name:</h3>
-        <label for="firstName">First name: </label>
+        <h3>Insert your name:</h3>
+        Comming soon...
+        <!-- <label for="firstName">First name: </label>
         <input type="text" id="firstName" value="">
         <label for="lastName">Last name: </label>
         <input type="text" id="lastName" value=""><br />
-        <small>The name of the user will be passed to the video conference session.</small>
+        <small>The name of the user will be passed to the video conference session.</small> -->
       </div>
   
       <div>
-        <h3>2. Create a meeting room:</h3>
+        <h3>Create a meeting room:</h3>
         https://web.immail.ca/meet/<input type="text" id="roomName" name="roomName" />
         <button onclick="createMeetingRoom()">Create a meeting room</button><br />
         <small>This is going to be the <b>meeting url</b> and will be set on <b>iframe src</b> attribute.</small>
       </div>
   
       <div>
-        <h3>3. Choose some options</h3>
+        <h3>Choose some options</h3>
         Comming soon...
         <!-- <input type="checkbox" id="option1" value="start_recording">
         <label for="option1"> Start Recording Automatically</label>
@@ -44,14 +45,14 @@
       </div>
   
       <div style="margin-top: 20px;">
-        <h3>3. Click to start:</h3>
+        <h3>Click to start:</h3>
 
         <button onclick="generateTokenAndEnterRoom(true)">Enter as Moderator</button>
         <button onclick="generateTokenAndEnterRoom(false)">Enter as Guest</button>
       </div>
 
       <div style="margin-top: 20px;">
-        <h3>4. Close if you want:</h3>
+        <h3>Close if you want:</h3>
 
         <button onclick="closeMeeting()">Close Meeting</button>
       </div>
@@ -123,7 +124,7 @@
             return acc
           }, '');
 
-        iframe.src = `https://stageweb.immailapp.ca/meet/${roomName}?${params}`;
+        iframe.src = `https://web.immail.ca/meet/${roomName}?${params}`;
       });
   };
 

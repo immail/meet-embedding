@@ -3,7 +3,7 @@ const cors = require('cors')
 const path = require("path")
 const axios = require('axios')
 const port = 3000
-const API_URL = 'https://stageapi.immailapp.ca'
+const API_URL = 'https://api.immail.ca'
 
 const EMAIL_DOMAIN = 'companyxpto.com'
 const API_KEY = 'xxxxxxxxxxxx' // Go to immail.ca > Sign in > Manage domain > API Key
