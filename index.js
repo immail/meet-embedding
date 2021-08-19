@@ -3,8 +3,8 @@ const cors = require('cors')
 const path = require("path")
 const axios = require('axios')
 const port = 3000
-const API_URL = 'https://api.immail.ca'
 
+const API_URL = 'https://api.immail.ca'
 const EMAIL_DOMAIN = 'companyxpto.com'
 const API_KEY = 'xxxxxxxxxxxx' // Go to immail.ca > Sign in > Manage domain > API Key
 
@@ -84,7 +84,7 @@ app.get('/room/create', async (req, res) => {
   
     res.status(200).json(room)
   } catch (err) {
-    res.status(500).end(err.stack)
+    res.status(500).json(err.response.data)
   }
 })
 
@@ -96,7 +96,7 @@ app.get('/token/participant', async (req, res) => {
   
     res.status('200').json(meetToken);
   } catch (err) {
-    res.status(500).end(err.stack);
+    res.status(500).json(err.response.data)
   }
 })
 

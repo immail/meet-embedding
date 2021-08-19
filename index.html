@@ -18,12 +18,11 @@
 
       <div>
         <h3>Insert your name:</h3>
-        Comming soon...
-        <!-- <label for="firstName">First name: </label>
+        <label for="firstName">First name: </label>
         <input type="text" id="firstName" value="">
         <label for="lastName">Last name: </label>
         <input type="text" id="lastName" value=""><br />
-        <small>The name of the user will be passed to the video conference session.</small> -->
+        <small>The name of the user will be passed to the video conference session.</small>
       </div>
   
       <div>
@@ -34,14 +33,21 @@
       </div>
   
       <div>
-        <h3>Choose some options</h3>
-        Comming soon...
-        <!-- <input type="checkbox" id="option1" value="start_recording">
-        <label for="option1"> Start Recording Automatically</label>
-        <input type="checkbox" id="option2" value="">
-        <label for="vehicle2"> Start audio </label>
-        <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-        <label for="vehicle3"> I have a boat</label> -->
+        <h3>Choose config options</h3>
+        <input type="checkbox" class="config-checkbox" id="config1" name="configs[]" value="start_recording">
+        <label for="config1"> Start Recording Automatically </label>
+        <input type="checkbox" class="config-checkbox" id="config2" name="configs[]" value="startWithAudioMuted">
+        <label for="config2"> Start with audio muted </label>
+        <input type="checkbox" class="config-checkbox" id="config3" name="configs[]" value="startWithVideoMuted">
+        <label for="config3"> Start with video muted </label>
+        <input type="checkbox" class="config-checkbox" id="config4" name="configs[]" value="fileRecordingsEnabled">
+        <label for="config4"> File recording enabled </label>
+      </div>
+
+      <div>
+        <h3>Choose interface options</h3>
+        <input type="checkbox" class="interface-checkbox" id="interface1" name="interfaces[]" value="HIDE_INVITE_MORE_HEADER">
+        <label for="interface1"> Hide invite more header </label>
       </div>
   
       <div style="margin-top: 20px;">
@@ -94,43 +100,77 @@
         document.getElementById('roomName').value = name;
       });
   };
-
+  
   function generateTokenAndEnterRoom (moderator) {
     return fetch(`http://localhost:3000/token/participant?roomName=${roomName}&moderator=${moderator}`)
-      .then(response => response.json())
-      .then(token => {
-        jwtToken = token;
+    .then(response => response.json())
+    .then(token => {
+      jwtToken = token;
+      
+      const element = document.getElementById("iframePlaceholder");
+      const template = document.getElementById("iframeTemplate");
+      element.innerHTML = template.innerHTML;
+      
+      const iframe = document.getElementById('iframe');
+    
+      const options = {
+        first_name: document.getElementById("firstName").value,
+        last_name: document.getElementById("lastName").value,
+        jwt: token,
+        ...getConfigOptions(),
+        ...getInterfaceOptions()
+      }
 
-        const element = document.getElementById("iframePlaceholder");
-        const template = document.getElementById("iframeTemplate");
-        element.innerHTML = template.innerHTML;
+      const params = Object.keys(options)
+        .reduce((acc, key, i) => {
+          if (i > 0) acc += '&'
+          acc += `${key}=${options[key]}`
+          return acc
+        }, '');
 
-        const iframe = document.getElementById('iframe');
-
-        const options = {
-          // first_name: document.getElementById("firstName").value,
-          // last_name: document.getElementById("lastName").value,
-          jwt: token,
-          // start_recording: true
-          // startWithAudioMuted: true,
-          // startWithVideoMuted: true,
-          // fileRecordingsEnabled: true
-        }
-
-        const params = Object.keys(options)
-          .reduce((acc, key, i) => {
-            if (i > 0) acc += '&'
-            acc += `${key}=${options[key]}`
-            return acc
-          }, '');
-
-        iframe.src = `https://web.immail.ca/meet/${roomName}?${params}`;
-      });
+      iframe.src = `https://web.immail.ca/meet/${roomName}?${params}`;
+    });
   };
 
   function closeMeeting () {
     const element = document.getElementById("iframePlaceholder");
     element.innerHTML = null;
+  }
+
+  function getConfigOptions () {
+    const defaultOptions = {
+      startWithAudioMuted: false,
+      startWithVideoMuted: false,
+      fileRecordingsEnabled: false
+    }
+    const values = []; 
+    const elements = document.getElementsByName('configs[]');
+
+    elements.forEach(element => {
+      if(element.checked) values.push(element.value);
+    });
+
+    return values.reduce((acc, item) => {
+      acc[item] = true;
+      return acc;
+    }, defaultOptions);
+  }
+
+  function getInterfaceOptions () {
+    const defaultOptions = {
+      HIDE_INVITE_MORE_HEADER: false
+    }
+    const values = []; 
+    const elements = document.getElementsByName('interfaces[]');
+
+    elements.forEach(element => {
+      if(element.checked) values.push(element.value);
+    });
+
+    return values.reduce((acc, item) => {
+      acc[item] = true;
+      return acc;
+    }, defaultOptions);
   }
 
 </script>
